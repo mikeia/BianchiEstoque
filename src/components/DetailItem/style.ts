@@ -11,10 +11,11 @@ export const styles = StyleSheet.create({
         marginTop:60,
         alignItems: 'center',
         justifyContent: 'center',
-      },
+    },
+
     listItem: {                        
         borderRadius: 16,
-        marginTop:10,
+        marginTop:2,
         width:'100%',        
     },
     textTituloItem: {
@@ -23,7 +24,7 @@ export const styles = StyleSheet.create({
         width: 235,
         marginRight: 8,
         maxWidth: 235,
-        marginBottom: 14,
+        marginBottom: 10,
         fontWeight: 'bold'
     },
     textTituloItemModal:{
@@ -67,7 +68,7 @@ export const styles = StyleSheet.create({
         maxWidth: '100%',
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 5,                
+        marginBottom: 2,                
     },
     textTituloModalSelectItem: {
         color: '#ffffff',
@@ -123,9 +124,7 @@ export const styles = StyleSheet.create({
         fontSize:30,
         fontWeight:'bold',
         color:'red',
-        borderWidth:4,
-      
-        
+        borderWidth:4,              
     },
     textClean :{
         fontSize:16,
@@ -164,7 +163,7 @@ export const styles = StyleSheet.create({
         fontSize: 32,
         padding: 10,
         maxWidth: '100%',
-        height: 70,
+        height: 60,
         color: '#000',
         fontWeight: "bold",
         alignContent: 'center',
@@ -173,8 +172,24 @@ export const styles = StyleSheet.create({
         textAlign: 'center',
         borderRadius: 4,
         marginBottom: 12,
-        marginTop: 5
+        marginTop: 3
 
+    },
+        infoUserEmp: {    
+        //textAlign:'center',
+        //alignContent: 'center',
+        //justifyContent: 'center',
+        //alignItems: 'center',
+        width: '100%',
+        //marginLeft: 10,  
+        fontWeight:'900'  
+    },
+      textUserEmp: {
+        color: 'gray',
+        fontSize: 15,
+        //alignContent: 'center',
+        //justifyContent: 'center',
+        //alignItems: 'center',
     },
     modalDetalhes: {
         backgroundColor: "#1E6F9F",
@@ -189,12 +204,10 @@ export const styles = StyleSheet.create({
     },
     modalConfirmLocalizador: {
         backgroundColor: "#1E6F9F",
-        margin: 10,
-        marginTop: 10,
         alignItems: "center",
         alignContent: 'center',
         justifyContent: "center",
-        borderRadius: 8,
+        borderRadius: 6,
         padding: 4,
         height:600
     },
@@ -246,7 +259,7 @@ export const styles = StyleSheet.create({
         width: '100%',
         borderColor: '#878585',
         marginTop: 4,
-        border: 8,        
+        //borderWidth: 1,        
     },
     containerModalSelectItem: {
           width:'100%',

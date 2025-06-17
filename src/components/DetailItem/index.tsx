@@ -6,6 +6,7 @@ import { Audio } from 'expo-av';
 import { ButtonScaner } from '../ButtonScaner';
 import { ButtonCancel } from '../ButtonCancel';
 import { ButtonConfirm } from '../ButtonConfirm';
+import { isCancel } from 'axios';
 
 type Props = {
     cdusuario: String,
@@ -16,6 +17,7 @@ type Props = {
 
 export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
     const [modal, setModal] = useState<'detailConfirmStock' | 'detail' | 'confirm' | 'itensOption' | ''>('')
+
     const [modalStyle, setModalStyle] = useState('primary')
     const [codItem, setCdItem] = React.useState('');
     const [codFabricante, setCdFabricante] = React.useState('');
@@ -28,14 +30,17 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
     const [number, onChangeNumber] = React.useState('');
     const [codFab, onChangeCodFab] = React.useState('');
     const [cdItemConfirmInput, oncdItemConfirmInput] = React.useState('');
+ 
     const [confirmEstoque, setConfirmEstoque] = React.useState('');
     const [cdExcesso, oncdExcesso] = React.useState('');
+
     const lastNameRef = useRef();
     const codItemRef = useRef();
     const codFabRef = useRef();
 
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+   
 
     const [itens, setItens] = useState([])
     const [itemClicado, setItemClicado] = useState(null);
@@ -67,15 +72,6 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
         }
     }, [cdItemConfirmInput])
 
-    //UseEffect da confirmção do excesso
-    // useEffect(() => {
-    //     if (cdExcesso !== '') {        
-    //         setModalStyle('primary')                    
-    //         onResumeSave()            
-    //     }
-
-    // }, [cdExcesso])
-
     //UseEffect para buscar o item,  Atribui o item bipado ao state codItem, caso seja lido algum item para reposição, faz a busca no banco de dados 
     useEffect(() => {
         if (number !== '') {            
@@ -90,6 +86,8 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
         cleanDetail()
         setModal('');      
     };
+
+   
 
     //Limpa valores na tela principal
     const cleanDetail = () => {
@@ -160,7 +158,7 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
         );  
            
     };    
-
+    
     //Seta o valor de setQtdeReposicaoItem, pegando do que foi digitado no input  quantidade
     const onVerify = () => {
         onChangeCodFab('')
@@ -296,9 +294,9 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
 		try {
             setModalStyle('primary')
 
-            if (cdItemConfirmInput.trim() !== '' && cdItemConfirmInput.trim() !== codItem.trim()) {                
-                setModalStyle('secondary')
-            }
+           // if (cdItemConfirmInput.trim() !== '' && cdItemConfirmInput.trim() !== codItem.trim()) {                
+             //   setModalStyle('secondary')
+            //}
 
             const payload = {
 				cd_empresa: cdempresa,
@@ -336,9 +334,15 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
         <View style={styles.container}>
             {/*View do Input que recebe o código do item que foi bipado*/}
             <View style={styles.listItem}>
+                
+                <Text style={styles.version}>Versão:1.0.8</Text>
+                <View style={styles.infoUserEmp}>
+                    <Text style={styles.textUserEmp}>
+                    Repositor: {repositor} | Empresa: {cdempresa}
+                    </Text>
+                </View> 
                 {!isEnabled ?
-                    <View style={styles.headerDetail}>                    
-                        <Text style={styles.version}>Versão:1.0.6</Text>                
+                    <View style={styles.headerDetail}>                                                    
                         <TextInput
                             style={styles.textInputItem}
                             onChangeText={onChangeNumber}
@@ -346,12 +350,10 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                             placeholder='Código do item...'
                             value={number}  
                             ref={codItemRef}                      
-                            autoFocus />
-                       
+                            autoFocus />                       
                     </View> 
                 :
-                    <View style={styles.headerDetail}>
-                        <Text style={styles.version}>Versão:1.0.6</Text>
+                    <View style={styles.headerDetail}>                        
                         <TextInput
                             style={styles.textInputItem}
                             onChangeText={onChangeCodFab}
@@ -360,7 +362,6 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                             value={codFab}
                             ref={codFabRef}
                             autoFocus />
-
                         <ButtonConfirm onPress={validate} titleButton={'Buscar'}/>    
                             
                     </View>
@@ -368,12 +369,12 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                 
             </View>
             <View style={styles.switchh}>
-            <Switch             
-                trackColor={{false: '#767577', true: '#81b0ff'}}
-                thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                onValueChange={toggleSwitch}
-                value={isEnabled}
-            /> 
+                <Switch             
+                    trackColor={{false: '#767577', true: '#81b0ff'}}
+                    thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                    onValueChange={toggleSwitch}
+                    value={isEnabled}
+                /> 
             </View>
 
             {/*Modal mensagem confirmação de estoque*/}
@@ -491,6 +492,9 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                     </View>
                 </Modal>
             </View>
+
+
+
 
             {/*Modal para mostrar itens quando retornar mais de 1 registro na function spcPesIteAvaLookUp const execProcedure*/}
             <View style={styles.containerModalSelectItem}>
