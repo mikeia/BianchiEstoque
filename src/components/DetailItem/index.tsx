@@ -233,8 +233,8 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                 cd_item: item.cd_item,
             });
                     
-            console.log('nota entrada item----------------')
-            console.log(notaEntrada)
+            //console.log('nota entrada item----------------')
+            //console.log(notaEntrada)
                 
             if (notaEntrada.qt_entrada != null && notaEntrada.qt_entrada > 0) {
                 setUltimaEntradaItem(notaEntrada.qt_entrada)
