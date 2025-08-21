@@ -214,7 +214,7 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
     };
 
     //Pega o item que foi selecionado de acordo com o fabricante escolhido
-    const handleItemPress = (item) => {
+    const handleItemPress = async (item) => {
         setCdItem('')
         setCdFabricante('')
         setLocalItem('')
@@ -226,8 +226,29 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
         setLocalItem(item.localizador)                    
         setSaldoItem(item.estoque)
 
-        setModal('detail');
-        setItemClicado(item);     
+        if (item.estoque > 0){
+            //Verifica a quantidade da Ultima Entrada
+            const { data: notaEntrada } = await api.post('NotaEntrada/cd_empresa/cd_item', {
+                cd_empresa: cdempresa,
+                cd_item: item.cd_item,
+            });
+                    
+            console.log('nota entrada item----------------')
+            console.log(notaEntrada)
+                
+            if (notaEntrada.qt_entrada != null && notaEntrada.qt_entrada > 0) {
+                setUltimaEntradaItem(notaEntrada.qt_entrada)
+            }else{
+                setUltimaEntradaItem('0') 
+            }
+
+            setModal('detail');
+            setItemClicado(item);     
+        }else{
+            Alert.alert('Item sem estoque, ou SEM localizador!');
+        }
+
+        
     };  
 
 
@@ -244,23 +265,14 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
             if (res !== null) {
                 
                 const local = res[0]
-                  
-                 setLocalItem(local.LOCALIZADOR);
+                 //console.log('res******----------------')
+                 //console.log(res[0])
+                 setLocalItem(!local.LOCALIZADOR ? "" : local.LOCALIZADOR);
                  setSaldoItem(local.ESTOQUE);  
                  setCdFabricante(local.FABRICANTE) 
                  setCdItem(local.cd_item)                            
 
-                //Verifica a quantidade da Ultima Entrada
-                const { data: notaEntrada } = await api.post('NotaEntrada/cd_empresa/cd_item', {
-                    cd_empresa: cdempresa,
-                    cd_item: local.cd_item,
-                });
-                
-                
-                if (notaEntrada.qt_entrada != null && notaEntrada.qt_entrada > 0) {
-                    setUltimaEntradaItem(notaEntrada.qt_entrada)
-                }
-                
+                                                
                 const itemsWithSelectedProperties = res.map((item) => ({
                     cd_item: item.cd_item,
                     fabricante: item.FABRICANTE,
@@ -294,9 +306,13 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
 		try {
             setModalStyle('primary')
 
-           // if (cdItemConfirmInput.trim() !== '' && cdItemConfirmInput.trim() !== codItem.trim()) {                
-             //   setModalStyle('secondary')
-            //}
+            const retiraEspaco = (str: string) => str.replace(/\s/g, '').toUpperCase()
+
+            if ( cdItemConfirmInput.trim() !== '' 
+                    && retiraEspaco(cdItemConfirmInput) !== retiraEspaco(localItem) 
+                    && retiraEspaco(cdItemConfirmInput) !== retiraEspaco(codItem)) {
+                setModalStyle('secondary')
+            }
 
             const payload = {
 				cd_empresa: cdempresa,
@@ -335,7 +351,7 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
             {/*View do Input que recebe o código do item que foi bipado*/}
             <View style={styles.listItem}>
                 
-                <Text style={styles.version}>Versão:1.0.8</Text>
+                <Text style={styles.version}>Versão:1.0.11</Text>
                 <View style={styles.infoUserEmp}>
                     <Text style={styles.textUserEmp}>
                     Repositor: {repositor} | Empresa: {cdempresa}
@@ -492,9 +508,6 @@ export function DetailItem({ cdusuario, cdempresa,repositor }: Props) {
                     </View>
                 </Modal>
             </View>
-
-
-
 
             {/*Modal para mostrar itens quando retornar mais de 1 registro na function spcPesIteAvaLookUp const execProcedure*/}
             <View style={styles.containerModalSelectItem}>
